@@ -81,7 +81,6 @@ with tab1:
                     except Exception:
                         classe_final = "OPERACIONAL"
                 else:
-                    # Se não tem chave de IA, faz uma checagem local por segurança
                     termos_op = ["limpar", "organizar", "caixa", "banco", "correio", "ajuda", "oi", "poeira", "pagar", "conta"]
                     if any(t in tarefa.lower() for t in termos_op) or len(tarefa) < 5:
                         classe_final = "OPERACIONAL"
@@ -116,7 +115,6 @@ with tab1:
                                 client = None
                     
                     if not client or CHAVE_GEMINI == "SUA_CHAVE_GEMINI_AQUI":
-                        # RELATÓRIO PADRÃO COMPLETO E ULTRA DETALHADO (QI 140 FIXO)
                         st.markdown(f"""
                         ### 🔍 1. ANÁLISE DO GARGALO OPERACIONAL (*CORE BUSINESS*)
                         A execução de microtarefas repetitivas e burocráticas pelo principal ativo estratégico da holding (o fundador) gera uma **anomalia de alocação tática**. Atividades que não escalam criam um teto técnico de crescimento, impedindo a descentralização de processos e a automação do ecossistema.
@@ -174,12 +172,20 @@ with tab1:
 with tab2:
     st.title("💎 Nossos Planos - Seja Membro da Holding")
     st.write("Escolha o plano ideal para blindar o tempo da sua empresa e aumentar seus lucros.")
+    st.markdown("---")
     
     p1, p2, p3 = st.columns(3)
+    
     with p1:
-        st.markdown("### 🥉 Plano Start\n\n**R$ 0,00** / Sempre Grátis\n\n* Análise básica de tarefas\n* Gráfico de rosca padrão")
+        st.markdown("### 🥉 Plano Start\n**R$ 0,00** / Sempre Grátis\n* Análise básica de tarefas\n* Gráfico de rosca padrão")
         st.button("Plano Atual", disabled=True, key="b1")
+        
     with p2:
-        st.markdown("### 🥈 Plano Dono Pro\n\n**R$ 29,90** / Mês\n\n* **IA Gemini Avançada (QI 140)**\n* Relatórios mensais estruturados\n* Acesso ao Histórico Completo")
+        st.markdown("### 🥈 Plano Dono Pro\n**R$ 29,90** / Mês\n* **IA Gemini Avançada (QI 140)**\n* Relatórios mensais estruturados\n* Acesso ao Histórico Completo")
         st.button("Assinar Plano Pro", type="primary", key="b2")
+        
     with p3:
+        st.markdown("### 🥇 Plano Holding VIP\n**R$ 89,90** / Mês\n* Integração Pix automatizada\n* Consultoria de Processos com Kaleb")
+        st.button("Falar com Consultor", key="b3")
+
+if st.button("Limpar Histórico e Resetar Painel"):
