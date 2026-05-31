@@ -120,7 +120,7 @@ with tab1:
                         A execução de microtarefas repetitivas e burocráticas pelo principal ativo estratégico da holding (o fundador) gera uma **anomalia de alocação tática**. Atividades que não escalam criam um teto técnico de crescimento, impedindo a descentralização de processos e a automação do ecossistema.
                         
                         ### 📉 2. DESTRUIÇÃO DE VALUATION E ROI
-                        Ao submeter sua agenda a essa operação por {tempo_estimado_tarefa} horas, a empresa sofreu uma retração direta de **R$ {prejuizo_oculto:.2f}** em custo de oportunidade. Multiplicado pelo ano fiscal, esse vazamento invisível de caixa destrói a margem de **EBITDA**, reduzindo drasticamente o *Valuation* patrimonial para rodadas de investimento futuros.
+                        Ao submeter sua agenda a essa operation por {tempo_estimado_tarefa} horas, a empresa sofreu uma retração direta de **R$ {prejuizo_oculto:.2f}** em custo de oportunidade. Multiplicado pelo ano fiscal, esse vazamento invisível de caixa destrói a margem de **EBITDA**, reduzindo drasticamente o *Valuation* patrimonial para rodadas de investimento futuros.
                         
                         ### 🚀 3. ENGENHARIA DE SOLUÇÃO E ESCALA
                         *   **Curto Prazo:** Delegar a função imediatamente para um assistente virtual terceirizado (BPO Administrativo) ou contratar mão de obra júnior/estagiário focada puramente em execução.
@@ -177,15 +177,15 @@ with tab2:
     p1, p2, p3 = st.columns(3)
     
     with p1:
-        st.markdown("### 🥉 Plano Start\n**R$ 0,00** / Sempre Grátis\n* Análise básica de tarefas\n* Gráfico de rosca padrão")
+        st.markdown("### 🥉 Plano Start\n\n**R$ 0,00** / Sempre Grátis\n\n* Análise básica de tarefas\n* Gráfico de rosca padrão")
         st.button("Plano Atual", disabled=True, key="b1")
         
     with p2:
-        st.markdown("### 🥈 Plano Dono Pro\n**R$ 29,90** / Mês\n* **IA Gemini Avançada (QI 140)**\n* Relatórios mensais estruturados\n* Acesso ao Histórico Completo")
+        st.markdown("### 🥈 Plano Dono Pro\n\n**R$ 29,90** / Mês\n\n* **IA Gemini Avançada (QI 140)**\n* Relatórios mensais estruturados\n* Acesso ao Histórico Completo")
         st.button("Assinar Plano Pro", type="primary", key="b2")
         
     with p3:
-        st.markdown("### 🥇 Plano Holding VIP\n**R$ 89,90** / Mês\n* Integração Pix automatizada\n* Consultoria de Processos com Kaleb")
+        st.markdown("### 🥇 Plano Holding VIP\n\n**R$ 89,90** / Mês\n\n* Integração Pix automatizada\n* Consultoria de Processos com Kaleb")
         st.button("Falar com Consultor", key="b3")
 
-if st.button("Limpar Histórico e Resetar Painel"):
+st.markdown("---")
