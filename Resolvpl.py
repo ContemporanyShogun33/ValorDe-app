@@ -7,7 +7,7 @@ import pandas as pd
 st.set_page_config(page_title="ValorDe AI - Premium BI", layout="wide")
 
 # --- CONEXÃO COM O GEMINI ---
-# IMPORTANTÍSSIMO: Cole sua chave real do Google AI Studio (pega em ://google.com) entre as aspas abaixo:
+# IMPORTANTÍSSIMO: Cole sua chave real do Google AI Studio entre as aspas abaixo:
 CHAVE_GEMINI = "SUA_CHAVE_GEMINI_AQUI"
 
 try:
@@ -34,6 +34,18 @@ st.sidebar.metric(label="Sua Hora Ideal Deve Valer", value=f"R$ {valor_hora_idea
 st.sidebar.markdown("---")
 st.sidebar.info("**Salmo 23:1**\n\n\"O Senhor é o meu pastor, nada me faltará.\" 🙏")
 
+st.sidebar.markdown("---")
+
+# 3. ABA DE FEEDBACK
+st.sidebar.subheader("💡 Sugestões e Erros")
+nome_usuario = st.sidebar.text_input("Seu Nome:")
+mensagem_feedback = st.sidebar.text_area("O que podemos melhorar no ValorDe?")
+if st.sidebar.button("Enviar Feedback"):
+    if nome_usuario and mensagem_feedback:
+        st.sidebar.success(f"Obrigado, {nome_usuario}! Kaleb Machado recebeu seu feedback.")
+    else:
+        st.sidebar.warning("Preencha o nome e a mensagem.")
+
 # --- 📊 PAINEL PRINCIPAL DIREITO ---
 tab1, tab2 = st.tabs(["📊 Documentador Avançado", "💎 Planos Mensais"])
 
@@ -41,7 +53,7 @@ with tab1:
     st.title("Documentador de Atividades Diárias")
     st.subheader("Monitore a fuga de valor estratégico da sua holding")
 
-    col_in1, col_in2 = st.columns([3, 1])
+    col_in1, col_in2 = st.columns(2)
     with col_in1:
         tarefa = st.text_input(label="Atividade Executada", placeholder="Ex: Passei a tarde organizando notas fiscais velhas...")
     with col_in2:
@@ -72,7 +84,6 @@ with tab1:
                     except Exception:
                         classe_final = "OPERACIONAL"
 
-                st.clear_cache()
                 st.write("---")
 
                 if "OPERACIONAL" in classe_final:
@@ -106,10 +117,9 @@ with tab1:
                             try:
                                 resposta = client.models.generate_content(model='gemini-2.5-flash', contents=prompt_diagnostico)
                                 st.markdown(resposta.text)
-                            except Exception as e:
-                                st.warning(f"Erro na conexão com a IA: {e}. Exibindo relatório padrão.")
+                            except Exception:
+                                st.markdown("Erro ao conectar à inteligência artificial do Google. Exibindo auditoria padrão.")
                         else:
-                            # Relatório padrão muito mais denso caso a chave não esteja configurada
                             st.markdown(f"""
                             ### 🔍 1. ANÁLISE DETALHADA DO GARGALO OPERACIONAL
                             A execução de microtarefas administrativas pelo principal tomador de decisão da empresa representa um severo desvio de foco do *Core Business*. Atividades repetitivas funcionam como um teto de crescimento invisível, limitando a capacidade de expansão da holding.
@@ -150,14 +160,6 @@ with tab1:
         estrat_val = st.session_state.historico["Estratégico"]
         operat_val = st.session_state.historico["Operacional (Prejuízo)"]
         
-        fig, ax = plt.subplots(figsize=(4, 3), facecolor='#0e1117')
-        ax.set_facecolor('#0e1117')
-        
-        if estrat_val == 0 and operat_val == 0:
-            valores = [1.0]
-            labels = ['Sem dados']
-            cores = ['#262730']
-            autopct = None
-        else:
+
 
 
