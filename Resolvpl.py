@@ -7,7 +7,6 @@ import pandas as pd
 st.set_page_config(page_title="ValorDe AI - Premium BI", layout="wide")
 
 # --- CONEXÃO COM O GEMINI ---
-# IMPORTANTÍSSIMO: Cole sua chave real do Google AI Studio entre as aspas abaixo:
 CHAVE_GEMINI = "SUA_CHAVE_GEMINI_AQUI"
 
 try:
@@ -68,21 +67,26 @@ with tab1:
             else:
                 tempo_estimado_tarefa = tempo_gasto
                 
-                # Engenharia de Prompt Avançada para Classificação Estrita
                 prompt_classificacao = (
-                    "Você é o algoritmo central de auditoria da holding ValorDe. Sua inteligência é analítica, fria e precisa.\n"
-                    "Analise a atividade executada pelo dono da empresa e responda RIGOROSAMENTE com apenas uma palavra (OPERACIONAL ou ESTRATEGICO).\n"
-                    "Regra: Se a atividade envolver tarefas braçais, burocracias, resolver problemas de parentes, ir ao banco, empacotar produtos, limpar a empresa ou responder mensagens repetitivas, classifique como OPERACIONAL.\n"
+                    "Você é o algoritmo de auditoria da holding ValorDe.\n"
+                    "Analise a atividade e responda com OPERACIONAL ou ESTRATEGICO.\n"
                     f"Atividade: '{tarefa}'"
                 )
                 
                 classe_final = "OPERACIONAL"
-                if client:
+                if client and CHAVE_GEMINI != "SUA_CHAVE_GEMINI_AQUI":
                     try:
                         res_classe = client.models.generate_content(model='gemini-2.5-flash', contents=prompt_classificacao)
                         classe_final = res_classe.text.strip().upper()
                     except Exception:
                         classe_final = "OPERACIONAL"
+                else:
+                    # Se não tem chave de IA, faz uma checagem local por segurança
+                    termos_op = ["limpar", "organizar", "caixa", "banco", "correio", "ajuda", "oi", "poeira", "pagar", "conta"]
+                    if any(t in tarefa.lower() for t in termos_op) or len(tarefa) < 5:
+                        classe_final = "OPERACIONAL"
+                    else:
+                        classe_final = "ESTRATEGICO"
 
                 st.write("---")
 
@@ -91,45 +95,39 @@ with tab1:
                     st.session_state.historico["Operacional (Prejuízo)"] += tempo_estimado_tarefa
                     
                     st.error(f"⚠️ **STATUS: ATIVIDADE OPERACIONAL DETECTADA**")
-                    st.markdown(f"🔴 **Custo de Oportunidade Desperdiçado:** R$ {prejuizo_oculto:.2f} (Baseado no tempo gasto de {tempo_estimado_tarefa}h)")
+                    st.markdown(f"🔴 **Custo de Oportunidade Desperdiçado:** R$ {prejuizo_oculto:.2f}")
                     
                     st.session_state.lista_atividades.append({
                         "Atividade": tarefa, "Horas": tempo_estimado_tarefa, "Tipo": "⚠️ Operacional", "Custo Oculto": f"R$ {prejuizo_oculto:.2f}"
                     })
                     
-                    # PROMPT QI 140: Força o Gemini a escrever de forma sofisticada e corporativa
                     prompt_diagnostico = (
-                        "Você é um consultor de eficiência corporativa de altíssimo nível (QI 140), especialista em Venture Capital e reestruturação de holdings.\n"
-                        "Gere um diagnóstico macroeconômico e de processos ultra detalhado, denso e técnico sobre o erro do empresário.\n"
-                        "Use termos corporativos avançados (Valuation, Gargalo de Escala, Core Business, Alocação Eficiente de Capital, EBITDA).\n\n"
-                        "Estruture sua resposta EXATAMENTE com os seguintes tópicos em Markdown:\n"
-                        "### 🔍 1. ANÁLISE DETALHADA DO GARGALO OPERACIONAL\n"
-                        "(Explique cientificamente o erro tático de o tomador de decisão da holding desviar seu foco para essa atividade específica)\n\n"
-                        "### 📉 2. DESTRUIÇÃO DE VALUATION E IMPACTO FINANCEIRO\n"
-                        "(Mostre o impacto financeiro de longo prazo com base no custo de oportunidade gerado)\n\n"
-                        "### 🚀 3. PLANO DE MITIGAÇÃO E AUTOMAÇÃO ESCALÁVEL\n"
-                        "(Apresente uma solução prática: cite o nome de um software específico do mercado ou o perfil exato de um profissional terceirizado ou estagiário que deveria assumir isso para destravar o crescimento do negócio)\n\n"
-                        f"Atividade analisada: '{tarefa}'. Custo de oportunidade direto: R$ {prejuizo_oculto:.2f}."
+                        "Você é um consultor de eficiência de altíssimo nível (QI 140), especialista em reestruturação de holdings.\n"
+                        "Gere um diagnóstico macroeconômico detalhado em Markdown usando jargões avançados.\n"
+                        f"Atividade analisada: '{tarefa}'. Custo: R$ {prejuizo_oculto:.2f}."
                     )
                     
-                    with st.spinner("Gerando Auditoria Avançada QI 140..."):
-                        if client:
+                    if client and CHAVE_GEMINI != "SUA_CHAVE_GEMINI_AQUI":
+                        with st.spinner("Gerando Auditoria Avançada QI 140..."):
                             try:
                                 resposta = client.models.generate_content(model='gemini-2.5-flash', contents=prompt_diagnostico)
                                 st.markdown(resposta.text)
                             except Exception:
-                                st.markdown("Erro ao conectar à inteligência artificial do Google. Exibindo auditoria padrão.")
-                        else:
-                            st.markdown(f"""
-                            ### 🔍 1. ANÁLISE DETALHADA DO GARGALO OPERACIONAL
-                            A execução de microtarefas administrativas pelo principal tomador de decisão da empresa representa um severo desvio de foco do *Core Business*. Atividades repetitivas funcionam como um teto de crescimento invisível, limitando a capacidade de expansão da holding.
-                            
-                            ### 📉 2. DESTRUIÇÃO DE VALUATION E IMPACTO FINANCEIRO
-                            Ao queimar {tempo_estimado_tarefa} horas nesta operação, a empresa sofreu uma perda direta de **R$ {prejuizo_oculto:.2f}** em poder de tração. No acumulado anual, esse hábito pode destruir dezenas de milhares de reais que deveriam estar sendo convertidos em margem de EBITDA ou novos clientes.
-                            
-                            ### 🚀 3. PLANO DE MITIGAÇÃO E AUTOMAÇÃO ESCALÁVEL
-                            Recomenda-se a imediata substituição da força de trabalho do fundador por sistemas de automação de processos (SaaS) ou pela contratação de um assistente virtual terceirizado (BPO Financeiro/Administrativo). Isolar o fundador dessas tarefas é a única forma de destravar o ganho de escala.
-                            """)
+                                client = None
+                    
+                    if not client or CHAVE_GEMINI == "SUA_CHAVE_GEMINI_AQUI":
+                        # RELATÓRIO PADRÃO COMPLETO E ULTRA DETALHADO (QI 140 FIXO)
+                        st.markdown(f"""
+                        ### 🔍 1. ANÁLISE DO GARGALO OPERACIONAL (*CORE BUSINESS*)
+                        A execução de microtarefas repetitivas e burocráticas pelo principal ativo estratégico da holding (o fundador) gera uma **anomalia de alocação tática**. Atividades que não escalam criam um teto técnico de crescimento, impedindo a descentralização de processos e a automação do ecossistema.
+                        
+                        ### 📉 2. DESTRUIÇÃO DE VALUATION E ROI
+                        Ao submeter sua agenda a essa operação por {tempo_estimado_tarefa} horas, a empresa sofreu uma retração direta de **R$ {prejuizo_oculto:.2f}** em custo de oportunidade. Multiplicado pelo ano fiscal, esse vazamento invisível de caixa destrói a margem de **EBITDA**, reduzindo drasticamente o *Valuation* patrimonial para rodadas de investimento futuros.
+                        
+                        ### 🚀 3. ENGENHARIA DE SOLUÇÃO E ESCALA
+                        *   **Curto Prazo:** Delegar a função imediatamente para um assistente virtual terceirizado (BPO Administrativo) ou contratar mão de obra júnior/estagiário focada puramente em execução.
+                        *   **Médio Prazo:** Implementar ferramentas integradas de automação em nuvem (*SaaS*) para isolar o fundador do trabalho operacional e blindar as horas estratégicas focadas em tração comercial.
+                        """)
                 
                 else:
                     st.session_state.historico["Estratégico"] += tempo_estimado_tarefa
@@ -137,29 +135,51 @@ with tab1:
                     st.session_state.lista_atividades.append({
                         "Atividade": tarefa, "Horas": tempo_estimado_tarefa, "Tipo": "🟢 Estratégica", "Custo Oculto": "R$ 0,00"
                     })
-                    
-                    prompt_diagnostico = (
-                        "Você é um consultor sênior QI 140. O dono da holding executou uma atividade de alto valor estratégico.\n"
-                        "Escreva um parecer corporativo sofisticado de 4 linhas explicando como essa alocação eficiente de tempo "
-                        "maximiza o ROI, acelera a tração de mercado e expande o Valuation da empresa no longo prazo.\n"
-                        f"Atividade executada: '{tarefa}'"
-                    )
-                    
-                    with st.spinner("Gerando Relatório de Crescimento..."):
-                        if client:
-                            try:
-                                resposta = client.models.generate_content(model='gemini-2.5-flash', contents=prompt_diagnostico)
-                                st.markdown(resposta.text)
-                            except Exception:
-                                st.markdown("Alocação de tempo altamente eficiente. Focar no crescimento de alto nível expande o Valuation e a governança corporativa do seu ecossistema.")
-                        else:
-                            st.markdown("Alocação de tempo altamente eficiente. Focar no crescimento de alto nível expande o Valuation e a governança corporativa do seu ecossistema.")
+                    st.markdown("""
+                    ### 📈 PARECER DE GOVERNANÇA CORPORATIVA
+                    A alocação de tempo atual está alinhada perfeitamente com os objetivos de alta escala do negócio. Concentrar os blocos de trabalho em inteligência comercial, expansão de produto ou aquisição de clientes gera um **retorno sobre o tempo (ROT)** exponencial, expandindo as métricas de tração e o valor de mercado (*Valuation*) do ecossistema.
+                    """)
 
     with col_grafico:
         st.write("### Divisão do Tempo do Dono")
         estrat_val = st.session_state.historico["Estratégico"]
         operat_val = st.session_state.historico["Operacional (Prejuízo)"]
         
+        fig, ax = plt.subplots(figsize=(4, 3), facecolor='#0e1117')
+        ax.set_facecolor('#0e1117')
+        
+        if estrat_val == 0 and operat_val == 0:
+            valores = [1.0]
+            labels = ['Sem dados']
+            cores = ['#262730']
+            autopct = None
+        else:
+            valores = [estrat_val, operat_val]
+            labels = ['Estratégico', 'Operacional']
+            cores = ['#2e7d32', '#d32f2f']
+            autopct = '%1.1f%%'
 
+        ax.pie(valores, labels=labels, colors=cores, autopct=autopct, startangle=90, textprops=dict(color="white", size=10, weight="bold"), wedgeprops=dict(width=0.4, edgecolor='#0e1117', linewidth=2))
+        ax.axis('equal')
+        st.pyplot(fig)
 
+    st.markdown("---")
+    st.write("### 📜 Linha do Tempo de Atividades da Holding")
+    if st.session_state.lista_atividades:
+        df = pd.DataFrame(st.session_state.lista_atividades)
+        st.dataframe(df, use_container_width=True)
+    else:
+        st.caption("Nenhuma atividade documentada no bloco atual.")
 
+with tab2:
+    st.title("💎 Nossos Planos - Seja Membro da Holding")
+    st.write("Escolha o plano ideal para blindar o tempo da sua empresa e aumentar seus lucros.")
+    
+    p1, p2, p3 = st.columns(3)
+    with p1:
+        st.markdown("### 🥉 Plano Start\n\n**R$ 0,00** / Sempre Grátis\n\n* Análise básica de tarefas\n* Gráfico de rosca padrão")
+        st.button("Plano Atual", disabled=True, key="b1")
+    with p2:
+        st.markdown("### 🥈 Plano Dono Pro\n\n**R$ 29,90** / Mês\n\n* **IA Gemini Avançada (QI 140)**\n* Relatórios mensais estruturados\n* Acesso ao Histórico Completo")
+        st.button("Assinar Plano Pro", type="primary", key="b2")
+    with p3:
