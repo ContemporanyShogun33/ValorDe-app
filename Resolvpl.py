@@ -47,7 +47,6 @@ st.sidebar.title("ValorDe AI 📊")
 st.sidebar.caption("Enterprise Edition | Powered by Kaleb Machado")
 st.sidebar.markdown("---")
 
-st.sidebar.subheader("⚙️ Configurações Financeiras")
 faturamento_mensal = st.sidebar.number_input("Meta de Faturamento Mensal (R$):", min_value=1.0, value=25000.0, step=1000.0)
 horas_operacionais_mes = st.sidebar.number_input("Horas de Trabalho Mensais:", min_value=1.0, value=160.0, step=10.0)
 
@@ -122,7 +121,6 @@ with tab_dashboard:
             prompt_classificacao = (
                 "Você é o algoritmo central de auditoria da holding ValorDe. Sua inteligência é analítica, fria e precisa.\n"
                 "Analise a atividade executada pelo dono da empresa e responda RIGOROSAMENTE com apenas uma palavra (OPERACIONAL ou ESTRATEGICO).\n"
-                "Regra: Se a atividade envolver tarefas braçais, burocracias, resolver problemas de parentes, ir ao banco, empacotar produtos, limpar a empresa ou responder mensagens repetitivas, classifique como OPERACIONAL.\n"
                 f"Atividade: '{atividade_analisada}'"
             )
             
@@ -179,8 +177,10 @@ with tab_dashboard:
                             client = None
                 
                 if not client or CHAVE_GEMINI == "SUA_CHAVE_GEMINI_AQUI":
+                    # CORREÇÃO DA ASMA TRIPLA: Texto estático blindado e formatado
                     st.markdown(f"""
-                    ### 🔍 1. GARGALO DE ALOCAÇÃO DE CAPITAL HUMANO
-                    A execução desta atividade pelo principal estrategista da holding representa uma quebra drástica na eficiência dos processos corporativos. Tarefas de baixa complexidade técnica criam um **gargalo invisível de escala**, forçando o tomador de decisão a operar como mão de obra operacional de baixo valor agregado, em vez de focar no *Core Business*.
-                    
-                    ### 📉 2. ANÁLISE DE IMPACTO FINANCEIRO E DESTRUIÇÃO DE EBITDA
+### 🔍 1. GARGALO DE ALOCAÇÃO DE CAPITAL HUMANO
+A execução desta atividade pelo principal estrategista da holding representa uma quebra drástica na eficiência dos processos corporativos. Tarefas de baixa complexidade técnica criam um **gargalo invisível de escala**, forçando o tomador de decisão a operar como mão de obra operacional de baixo valor agregado, em vez de focar no *Core Business*.
+
+### 📉 2. ANÁLISE DE IMPACTO FINANCEIRO E DESTRUIÇÃO DE EBITDA
+
