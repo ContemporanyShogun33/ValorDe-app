@@ -24,8 +24,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- CONEXÃO COM O MOTOR DE IA GEMINI ---
-CHAVE_GEMINI ="AIzaSySeuCodigoGiganteAqui..."
-try
+# IMPORTANTÍSSIMO: Cole sua chave do Google AI Studio dentro das aspas abaixo!
+CHAVE_GEMINI = "SUA_CHAVE_GEMINI_AQUI"
+
+try:
     client = genai.Client(api_key=CHAVE_GEMINI)
 except Exception:
     client = None
@@ -71,7 +73,7 @@ with tab_dashboard:
     st.subheader("Inteligência analítica contra a queima de Valuation corporativo")
     st.markdown("---")
     
-    # PAINEL DE MÉTRICAS OPERACIONAIS (Substitui o gráfico de pizza antigo)
+    # PAINEL DE MÉTRICAS OPERACIONAIS
     m1, m2, m3 = st.columns(3)
     total_horas = st.session_state.tempo_estrategico + st.session_state.tempo_operacional
     percent_estrategico = (st.session_state.tempo_estrategico / total_horas * 100) if total_horas > 0 else 0.0
@@ -105,7 +107,6 @@ with tab_dashboard:
 
     st.markdown("---")
     
-    # CORREÇÃO DA LINHA 103: Número 2 adicionado explicitamente para alinhar as duas colunas
     c_input, c_tempo = st.columns(2)
     with c_input:
         atividade_analisada = st.text_input("Descreva minuciosamente a atividade executada nas últimas horas:", placeholder="Ex: Analisei as planilhas de margem líquida e fechei contrato com 2 clientes...")
@@ -116,83 +117,70 @@ with tab_dashboard:
         if not atividade_analisada:
             st.warning("Insira os dados da atividade para processar os algoritmos de BI.")
         else:
-            termos_gargalo = ["limpar", "limpando", "poeira", "organizar", "entregar", "empacotar", "lavar", "caixa", "banco", "correio", "ajuda", "oi", "pagar", "conta", "parentes", "mãe"]
-            is_operacional = any(termo in atividade_analisada.lower() for termo in termos_gargalo) or len(atividade_analisada) < 6
+            tempo_estimado_tarefa = horas_alocadas
+            
+            prompt_classificacao = (
+                "Você é o algoritmo central de auditoria da holding ValorDe. Sua inteligência é analítica, fria e precisa.\n"
+                "Analise a atividade executada pelo dono da empresa e responda RIGOROSAMENTE com apenas uma palavra (OPERACIONAL ou ESTRATEGICO).\n"
+                "Regra: Se a atividade envolver tarefas braçais, burocracias, resolver problemas de parentes, ir ao banco, empacotar produtos, limpar a empresa ou responder mensagens repetitivas, classifique como OPERACIONAL.\n"
+                f"Atividade: '{atividade_analisada}'"
+            )
+            
+            classe_final = "OPERACIONAL"
+            if client and CHAVE_GEMINI != "SUA_CHAVE_GEMINI_AQUI":
+                try:
+                    res_classe = client.models.generate_content(model='gemini-2.5-flash', contents=prompt_classificacao)
+                    classe_final = res_classe.text.strip().upper()
+                except Exception:
+                    classe_final = "OPERACIONAL"
+            else:
+                termos_gargalo = ["limpar", "limpando", "poeira", "organizar", "entregar", "empacotar", "lavar", "caixa", "banco", "correio", "ajuda", "oi", "pagar", "conta", "parentes", "mãe"]
+                if any(termo in atividade_analisada.lower() for termo in termos_gargalo) or len(atividade_analisada) < 6:
+                    classe_final = "OPERACIONAL"
+                else:
+                    classe_final = "ESTRATEGICO"
 
             st.markdown("### 📋 Relatório de Auditoria Executiva")
             
-            if is_operacional:
-                perda_financeira = horas_alocadas * valor_hora_patrimonial
-                st.session_state.tempo_operacional += horas_alocadas
+            if "OPERACIONAL" in classe_final:
+                perda_financeira = tempo_estimado_tarefa * valor_hora_patrimonial
+                st.session_state.tempo_operacional += tempo_estimado_tarefa
                 st.session_state.custo_total_desperdiçado += perda_financeira
                 
                 st.session_state.logs_auditoria.append({
                     "Atividade Analisada": atividade_analisada,
-                    "Alocação Temporal": f"{horas_alocadas}h",
+                    "Alocação Temporal": f"{tempo_estimado_tarefa}h",
                     "Classificação": "⚠️ Operacional (Prejuízo)",
                     "Dano ao Valuation": f"R$ {perda_financeira:.2f}"
                 })
                 
                 st.error(f"🔴 **CRÍTICO: DETECTADA FUGA DE VALOR PATRIMONIAL** | Custo de Oportunidade Desperdiçado: R$ {perda_financeira:.2f}")
                 
-                st.markdown(f"""
-                ### 🔍 1. GARGALO DE ALOCAÇÃO DE CAPITAL HUMANO
-                A execução desta atividade pelo principal estrategista da holding representa uma quebra drástica na eficiência dos processos corporativos. Tarefas de baixa complexidade técnica criam um **gargalo invisível de escala**, forçando o tomador de decisão a operar como mão de obra operacional de baixo valor agregado, em vez de focar no *Core Business*.
+                prompt_diagnostico = (
+                    "Você é um consultor de eficiência corporativa de altíssimo nível (QI 140), especialista em Venture Capital e reestruturação de holdings.\n"
+                    "Gere um diagnóstico macroeconômico e de processos ultra detalhado, denso e técnico sobre o erro do empresário.\n"
+                    "Use termos corporativos avançados (Valuation, Gargalo de Escala, Core Business, Alocação Eficiente de Capital, EBITDA).\n\n"
+                    "Estruture sua resposta EXATAMENTE com os seguintes tópicos em Markdown:\n"
+                    "### 🔍 1. ANÁLISE DETALHADA DO GARGALO OPERACIONAL\n"
+                    "(Explique cientificamente o erro tático de o tomador de decisão da holding desviar seu foco para essa atividade específica)\n\n"
+                    "### 📉 2. DESTRUIÇÃO DE VALUATION E IMPACTO FINANCEIRO\n"
+                    "(Mostre o impacto financeiro de longo prazo com base no custo de oportunidade gerado)\n\n"
+                    "### 🚀 3. PLANO DE MITIGAÇÃO E AUTOMAÇÃO ESCALÁVEL\n"
+                    "(Apresente uma solução prática: cite o nome de um software específico do mercado ou o perfil exato de um profissional terceirizado ou estagiário que deveria assumir isso para destravar o crescimento do negócio)\n\n"
+                    f"Atividade analisada: '{atividade_analisada}'. Custo de oportunidade direto: R$ {perda_financeira:.2f}."
+                )
                 
-                ### 📉 2. ANÁLISE DE IMPACTO FINANCEIRO E DESTRUIÇÃO DE EBITDA
-                Ao desviar {horas_alocadas}h de foco estratégico para processos burocráticos/braçais, a holding gerou um prejuízo imediato de **R$ {perda_financeira:.2f}** em poder de tração de mercado. Se esse padrão comportamental persistir no planejamento anual, a empresa perderá dezenas de milhares de reais que deveriam expandir o lucro líquido e a margem de EBITDA do ecossistema.
+                if client and CHAVE_GEMINI != "SUA_CHAVE_GEMINI_AQUI":
+                    with st.spinner("Gerando Auditoria Avançada QI 140..."):
+                        try:
+                            resposta = client.models.generate_content(model='gemini-2.5-flash', contents=prompt_diagnostico)
+                            st.markdown(resposta.text)
+                        except Exception:
+                            client = None
                 
-                ### 🚀 3. ENGENHARIA DE PROCESSO E AUTOMAÇÃO RECOMENDADA
-                *   **Substituição Imediata:** Migrar esta tarefa para uma infraestrutura de software de automação (*SaaS*) ou contratar um serviço terceirizado especializado (*BPO* Administrativo/Financeiro).
-                *   **Plano de Ação Executivo:** Delegação compulsória para um estagiário ou assistente júnior. Liberar a agenda do fundador para tarefas de captação de clientes gera um retorno sobre o tempo (*ROT*) exponencialmente maior.
-                """)
-            else:
-                st.session_state.tempo_estrategico += horas_alocadas
-                
-                st.session_state.logs_auditoria.append({
-                    "Atividade Analisada": atividade_analisada,
-                    "Alocação Temporal": f"{horas_alocadas}h",
-                    "Classificação": "🟢 Alta Estratégia",
-                    "Dano ao Valuation": "R$ 0,00"
-                })
-                
-                st.success("🟢 **EFICIÊNCIA CONFIRMADA: ALOCAÇÃO DE TEMPO ALTO VALOR ESTRATÉGICO**")
-                st.markdown("""
-                ### 📈 CERTIFICAÇÃO DE GOVERNANÇA CORPORATIVA
-                A atividade executada possui características de alta alavancagem comercial e planejamento tático. Concentrar esforços em vendas, captação, desenvolvimento de produto ou novos canais de distribuição gera ganho de escala imediato, acelera os indicadores de tração do ecossistema e maximiza de forma direta o *Valuation* patrimonial da holding.
-                """)
-            
-            st.rerun()
-
-    # --- HISTÓRICO EM TABELA CORPORATIVA ---
-    st.markdown("---")
-    st.write("### 📜 Linha do Tempo de Auditoria Consolidada")
-    if st.session_state.logs_auditoria:
-        df_auditoria = pd.DataFrame(st.session_state.logs_auditoria)
-        st.dataframe(df_auditoria, use_container_width=True)
-        
-        csv_data = df_auditoria.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="📥 Exportar Relatório de Eficiência Empresarial (CSV)",
-            data=csv_data,
-            file_name="auditoria_valorde_bi.csv",
-            mime="text/csv"
-        )
-    else:
-        st.caption("Nenhum registro de auditoria arquivado na sessão corrente.")
-
-with tab_planos:
-    st.title("💎 Nossos Planos - Modelos de Licenciamento")
-    st.write("Selecione a licença corporativa ideal para escalar a automação e auditoria do seu grupo empresarial.")
-    st.markdown("---")
-    
-    col_p1, col_p2, col_p3 = st.columns(3)
-    
-    with col_p1:
-        st.markdown("""
-        ### 🥉 Licença Start
-        **R$ 0,00** / Sempre Grátis
-        * Acesso ao Dashboard Corporativo
-        * Auditoria local de processos básicos
-        * Relatório padrão de custo de oportunidade
-        """)
+                if not client or CHAVE_GEMINI == "SUA_CHAVE_GEMINI_AQUI":
+                    st.markdown(f"""
+                    ### 🔍 1. GARGALO DE ALOCAÇÃO DE CAPITAL HUMANO
+                    A execução desta atividade pelo principal estrategista da holding representa uma quebra drástica na eficiência dos processos corporativos. Tarefas de baixa complexidade técnica criam um **gargalo invisível de escala**, forçando o tomador de decisão a operar como mão de obra operacional de baixo valor agregado, em vez de focar no *Core Business*.
+                    
+                    ### 📉 2. ANÁLISE DE IMPACTO FINANCEIRO E DESTRUIÇÃO DE EBITDA
