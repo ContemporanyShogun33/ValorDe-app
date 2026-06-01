@@ -9,10 +9,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilização CSS customizada para eliminar o visual padrão e criar uma interface Executiva
+# Estilização CSS customizada para criar uma interface executiva e limpa
 st.markdown("""
 <style>
-    .reportview-container { background: #0A0C10; }
     .metric-card {
         background-color: #161B22;
         border: 1px solid #30363D;
@@ -20,12 +19,6 @@ st.markdown("""
         border-radius: 12px;
         text-align: center;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    .status-box {
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        font-weight: bold;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -47,7 +40,7 @@ if "custo_total_desperdiçado" not in st.session_state:
 if "logs_auditoria" not in st.session_state:
     st.session_state.logs_auditoria = []
 
-# --- 📐 PAINEL LATERAL DE GOVERNANÇA CORPORATIVA ---
+# --- 📐 PAINEL LATERAL DE GOVERNANÇA ---
 st.sidebar.title("ValorDe AI 📊")
 st.sidebar.caption("Enterprise Edition | Powered by Kaleb Machado")
 st.sidebar.markdown("---")
@@ -56,7 +49,6 @@ st.sidebar.subheader("⚙️ Configurações Financeiras")
 faturamento_mensal = st.sidebar.number_input("Meta de Faturamento Mensal (R$):", min_value=1.0, value=25000.0, step=1000.0)
 horas_operacionais_mes = st.sidebar.number_input("Horas de Trabalho Mensais:", min_value=1.0, value=160.0, step=10.0)
 
-# Cálculo em tempo real do custo minuto/hora do ativo (fundador)
 valor_hora_patrimonial = faturamento_mensal / horas_operacionais_mes
 st.sidebar.metric(label="Valor Patrimonial da sua Hora", value=f"R$ {valor_hora_patrimonial:.2f}/h")
 
@@ -79,7 +71,7 @@ with tab_dashboard:
     st.subheader("Inteligência analítica contra a queima de Valuation corporativo")
     st.markdown("---")
     
-    # PAINEL DE MÉTRICAS OPERACIONAIS (Substitui o gráfico de pizza amador por KPIs de Mercado)
+    # PAINEL DE MÉTRICAS OPERACIONAIS (Substitui o gráfico de pizza antigo)
     m1, m2, m3 = st.columns(3)
     total_horas = st.session_state.tempo_estrategico + st.session_state.tempo_operacional
     percent_estrategico = (st.session_state.tempo_estrategico / total_horas * 100) if total_horas > 0 else 0.0
@@ -113,7 +105,7 @@ with tab_dashboard:
 
     st.markdown("---")
     
-    # INPUT INTERATIVO DA MÁQUINA DE AUDITORIA
+    # CORREÇÃO DA LINHA 103: Número 2 adicionado explicitamente para alinhar as duas colunas
     c_input, c_tempo = st.columns(2)
     with c_input:
         atividade_analisada = st.text_input("Descreva minuciosamente a atividade executada nas últimas horas:", placeholder="Ex: Analisei as planilhas de margem líquida e fechei contrato com 2 clientes...")
@@ -124,7 +116,6 @@ with tab_dashboard:
         if not atividade_analisada:
             st.warning("Insira os dados da atividade para processar os algoritmos de BI.")
         else:
-            # Algoritmo Local de Filtro de Contexto antes da chamada da IA
             termos_gargalo = ["limpar", "limpando", "poeira", "organizar", "entregar", "empacotar", "lavar", "caixa", "banco", "correio", "ajuda", "oi", "pagar", "conta", "parentes", "mãe"]
             is_operacional = any(termo in atividade_analisada.lower() for termo in termos_gargalo) or len(atividade_analisada) < 6
 
@@ -135,9 +126,7 @@ with tab_dashboard:
                 st.session_state.tempo_operacional += horas_alocadas
                 st.session_state.custo_total_desperdiçado += perda_financeira
                 
-                # Inserção no histórico estruturado
                 st.session_state.logs_auditoria.append({
-                    "Timestamp": pd.Timestamp.now().strftime("%H:%M:%S"),
                     "Atividade Analisada": atividade_analisada,
                     "Alocação Temporal": f"{horas_alocadas}h",
                     "Classificação": "⚠️ Operacional (Prejuízo)",
@@ -146,7 +135,6 @@ with tab_dashboard:
                 
                 st.error(f"🔴 **CRÍTICO: DETECTADA FUGA DE VALOR PATRIMONIAL** | Custo de Oportunidade Desperdiçado: R$ {perda_financeira:.2f}")
                 
-                # OUTPUT REALISTA QI 140 (Elimina de vez as respostas simplórias de uma linha)
                 st.markdown(f"""
                 ### 🔍 1. GARGALO DE ALOCAÇÃO DE CAPITAL HUMANO
                 A execução desta atividade pelo principal estrategista da holding representa uma quebra drástica na eficiência dos processos corporativos. Tarefas de baixa complexidade técnica criam um **gargalo invisível de escala**, forçando o tomador de decisão a operar como mão de obra operacional de baixo valor agregado, em vez de focar no *Core Business*.
@@ -162,7 +150,6 @@ with tab_dashboard:
                 st.session_state.tempo_estrategico += horas_alocadas
                 
                 st.session_state.logs_auditoria.append({
-                    "Timestamp": pd.Timestamp.now().strftime("%H:%M:%S"),
                     "Atividade Analisada": atividade_analisada,
                     "Alocação Temporal": f"{horas_alocadas}h",
                     "Classificação": "🟢 Alta Estratégia",
@@ -175,16 +162,37 @@ with tab_dashboard:
                 A atividade executada possui características de alta alavancagem comercial e planejamento tático. Concentrar esforços em vendas, captação, desenvolvimento de produto ou novos canais de distribuição gera ganho de escala imediato, acelera os indicadores de tração do ecossistema e maximiza de forma direta o *Valuation* patrimonial da holding.
                 """)
             
-            # Força o refresh visual para atualizar os cards de métricas no topo imediatamente
             st.rerun()
 
-    # --- HISTÓRICO PERSISTENTE EM FORMATO DE TABELA CORPORATIVA ---
+    # --- HISTÓRICO EM TABELA CORPORATIVA ---
     st.markdown("---")
     st.write("### 📜 Linha do Tempo de Auditoria Consolidada")
     if st.session_state.logs_auditoria:
         df_auditoria = pd.DataFrame(st.session_state.logs_auditoria)
         st.dataframe(df_auditoria, use_container_width=True)
         
-        # CORREÇÃO DO PARÊNTESE: Exportação segura de dados para CSV
         csv_data = df_auditoria.to_csv(index=False).encode('utf-8')
         st.download_button(
+            label="📥 Exportar Relatório de Eficiência Empresarial (CSV)",
+            data=csv_data,
+            file_name="auditoria_valorde_bi.csv",
+            mime="text/csv"
+        )
+    else:
+        st.caption("Nenhum registro de auditoria arquivado na sessão corrente.")
+
+with tab_planos:
+    st.title("💎 Nossos Planos - Modelos de Licenciamento")
+    st.write("Selecione a licença corporativa ideal para escalar a automação e auditoria do seu grupo empresarial.")
+    st.markdown("---")
+    
+    col_p1, col_p2, col_p3 = st.columns(3)
+    
+    with col_p1:
+        st.markdown("""
+        ### 🥉 Licença Start
+        **R$ 0,00** / Sempre Grátis
+        * Acesso ao Dashboard Corporativo
+        * Auditoria local de processos básicos
+        * Relatório padrão de custo de oportunidade
+        """)
