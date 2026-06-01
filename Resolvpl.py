@@ -114,7 +114,7 @@ with tab_dashboard:
     st.markdown("---")
     
     # INPUT INTERATIVO DA MÁQUINA DE AUDITORIA
-    c_input, c_tempo = st.columns([3, 1])
+    c_input, c_tempo = st.columns(2)
     with c_input:
         atividade_analisada = st.text_input("Descreva minuciosamente a atividade executada nas últimas horas:", placeholder="Ex: Analisei as planilhas de margem líquida e fechei contrato com 2 clientes...")
     with c_tempo:
@@ -185,6 +185,6 @@ with tab_dashboard:
         df_auditoria = pd.DataFrame(st.session_state.logs_auditoria)
         st.dataframe(df_auditoria, use_container_width=True)
         
-        # Recurso Avançado de Mercado: Exportação de Relatórios para Tomada de Decisão
+        # CORREÇÃO DO PARÊNTESE: Exportação segura de dados para CSV
         csv_data = df_auditoria.to_csv(index=False).encode('utf-8')
         st.download_button(
