@@ -24,8 +24,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- CONEXÃO COM O MOTOR DE IA GEMINI ---
-CHAVE_GEMINI = "SUA_CHAVE_GEMINI_AQUI"
-try:
+CHAVE_GEMINI ="AIzaSySeuCodigoGiganteAqui..."
+try
     client = genai.Client(api_key=CHAVE_GEMINI)
 except Exception:
     client = None
