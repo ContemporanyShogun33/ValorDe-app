@@ -164,7 +164,7 @@ with tab_dashboard:
                     "### 📉 2. DESTRUIÇÃO DE VALUATION E IMPACTO FINANCEIRO\n"
                     "(Mostre o impacto financeiro de longo prazo com base no custo de oportunidade gerado)\n\n"
                     "### 🚀 3. PLANO DE MITIGAÇÃO E AUTOMAÇÃO ESCALÁVEL\n"
-                    "(Apresente uma solução prática: cite o nome de um software específico do mercado ou o perfil exato de um profissional terceirizado ou estagiário que deveria assumir isso para destravar o crescimento do negócio)\n\n"
+                    "(Apresente uma solution prática: cite o nome de um software específico do mercado ou o perfil exato de um profissional terceirizado ou estagiário que deveria assumir isso para destravar o crescimento do negócio)\n\n"
                     f"Atividade analisada: '{atividade_analisada}'. Custo de oportunidade direto: R$ {perda_financeira:.2f}."
                 )
                 
@@ -177,10 +177,11 @@ with tab_dashboard:
                             client = None
                 
                 if not client or CHAVE_GEMINI == "SUA_CHAVE_GEMINI_AQUI":
-                    # CORREÇÃO DA ASMA TRIPLA: Texto estático blindado e formatado
-                    st.markdown(f"""
-### 🔍 1. GARGALO DE ALOCAÇÃO DE CAPITAL HUMANO
-A execução desta atividade pelo principal estrategista da holding representa uma quebra drástica na eficiência dos processos corporativos. Tarefas de baixa complexidade técnica criam um **gargalo invisível de escala**, forçando o tomador de decisão a operar como mão de obra operacional de baixo valor agregado, em vez de focar no *Core Business*.
-
-### 📉 2. ANÁLISE DE IMPACTO FINANCEIRO E DESTRUIÇÃO DE EBITDA
+                    # FIX TOTAL DAS ASPAS TRIPLAS: Agora o texto é montado em formato de bloco seguro por linhas
+                    texto_auditoria = (
+                        "### 🔍 1. GARGALO DE ALOCAÇÃO DE CAPITAL HUMANO\n"
+                        "A execução desta atividade pelo principal estrategista da holding representa uma quebra drástica na eficiência dos processos corporativos. "
+                        "Tarefas de baixa complexidade técnica criam um **gargalo invisível de escala**, forçando o tomador de decisão a operar como mão de obra operacional "
+                        "de baixo valor agregado, em vez de focar no *Core Business*.\n\n"
+                        "### 📉 2. ANÁLISE DE IMPACTO FINANCEIRO E DESTRUIÇÃO DE EBITDA\n"
 
