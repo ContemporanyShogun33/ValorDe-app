@@ -75,7 +75,7 @@ with tab_dashboard:
         cor_escala = "#8B949E"
         texto_vulnerabilidade = "2.0h (Inércia Inicial)"
 
-    # RECURSO ADVANCED: Cards Executivos Customizados via HTML/CSS
+    # Cards Executivos Customizados via HTML/CSS
     m1, m2, m3 = st.columns(3)
     
     with m1:
@@ -89,7 +89,7 @@ with tab_dashboard:
 
     st.markdown("---")
     
-    # RECURSO ADVANCED 2: Barras Progressivas Visuais Nativas do Streamlit para Analítico de Performance
+    # Barras Progressivas Visuais Nativas do Streamlit
     st.write("### 📈 Painel Volométrico de Desempenho")
     st.write("**Aproveitamento Estratégico da Holding:**")
     st.progress(float(percent_estrategico / 100))
@@ -133,7 +133,7 @@ with tab_dashboard:
                 st.write("A alocação da força de trabalho do tomador de decisão em microtarefas acessórias quebra o ganho de escala. Esse gargalo impede a automação corporativa e bloqueia o desenvolvimento de novos canais de receita estruturada.")
                 
                 st.markdown("#### 📉 2. CORROSÃO DE EBITDA E VALUATION")
-                st.write(f"Queimar {horas_alocadas}h em sub-processos braçais drena R$ {perda_financeira:.2f} do caixa operacional implícito. No longo prazo, esse hábito corrói a margem líquida da empresa, inviabilizando rodadas de captação de investimento.")
+                st.write(f"Queimar {horas_alocadas}h in sub-processos braçais drena R$ {perda_financeira:.2f} do caixa operacional implícito. No longo prazo, esse hábito corrói a margem líquida da empresa, inviabilizando rodadas de captação de investimento.")
                 
                 st.markdown("#### 🚀 3. ENGENHARIA DE CORREÇÃO")
                 st.write("Recomenda-se a contratação urgente de um assistente virtual terceirizado (BPO) ou implementação de ferramentas de automação SaaS para assumir o processo e blindar o tempo estratégico do fundador.")
@@ -186,3 +186,5 @@ with tab_planos:
         st.button("Adquirir Licença Pro", type="primary", key="p_pro")
         
     with col_p3:
+        st.markdown("### 🥇 Licença Holding VIP\n\n**R$ 89,90** / Mensal\n\n* **Recursos Avançados Desbloqueados**\n* Painel Multi-Empresas integrado\n* Mentoria de processos e arquitetura com Kaleb Machado")
+
