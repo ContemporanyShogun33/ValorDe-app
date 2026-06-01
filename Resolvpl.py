@@ -11,7 +11,7 @@ st.set_page_config(
 # Estilização CSS customizada
 st.markdown("<style>.metric-card { background-color: #161B22; border: 1px solid #30363D; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }</style>", unsafe_allow_html=True)
 
-# --- CONFIGURAÇÕES FINANCEIRAS FIXAS NO CPF DA MÃE ---
+# --- CONFIGURAÇÕES FINANCEIRAS ---
 faturamento_mensal = 25000.0
 horas_operacionais_mes = 160.0
 valor_hora_patrimonial = faturamento_mensal / horas_operacionais_mes
@@ -39,7 +39,7 @@ st.sidebar.metric(label="Valor Patrimonial da sua Hora", value=f"R$ {valor_hora_
 st.sidebar.markdown("---")
 st.sidebar.info("**Salmo 23:1**\n\n\"O Senhor é o meu pastor, nada me faltará.\" 🙏")
 
-# --- 📊 PAINEL PRINCIPAL DIREITO ---
+# --- 📊 CONTROLADORA E INTERFACE PRINCIPAL ---
 tab_dashboard, tab_planos = st.tabs(["🖥️ Enterprise Dashboard", "💎 Assinaturas & Licenciamento"])
 
 with tab_dashboard:
@@ -47,13 +47,22 @@ with tab_dashboard:
     st.subheader("Inteligência analítica contra a queima de Valuation corporativo")
     st.markdown("---")
     
-    # PAINEL DE MÉTRICAS OPERACIONAIS (KPIs de Mercado)
-    m1, m2, m3 = st.columns(3)
+    # ⚖️ LÓGICA DE ESCALA REALISTA: Se não há horas registradas, o índice é 0.0% (Fim da mentira!)
     total_horas = st.session_state.tempo_estrategico + st.session_state.tempo_operacional
-    percent_estrategico = (st.session_state.tempo_estrategico / total_horas * 100) if total_horas > 0 else 0.0
+    
+    if total_horas > 0:
+        percent_estrategico = (st.session_state.tempo_estrategico / total_horas) * 100
+        texto_escala = f"{percent_estrategico:.1f}%"
+        cor_escala = "#2EA043" if percent_estrategico >= 80 else "#D29922" if percent_estrategico >= 50 else "#F85149"
+    else:
+        texto_escala = "0.0% (Aguardando Dados)"
+        cor_escala = "#8B949E" # Cinza neutro comercial
+
+    # PAINEL DE MÉTRICAS OPERACIONAIS COM ESCALA CORRIGIDA
+    m1, m2, m3 = st.columns(3)
     
     with m1:
-        st.markdown(f'<div class="metric-card"><h4 style="color: #8B949E; margin:0;">ÍNDICE DE FOCO ESTRATÉGICO</h4><h1 style="color: #2EA043; margin:10px 0;">{percent_estrategico:.1f}%</h1><p style="color: #8B949E; font-size:12px; margin:0;">Meta ideal de mercado: > 80%</p></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-card"><h4 style="color: #8B949E; margin:0;">ÍNDICE DE FOCO ESTRATÉGICO</h4><h1 style="color: {cor_escala}; margin:10px 0;">{texto_escala}</h1><p style="color: #8B949E; font-size:12px; margin:0;">Meta ideal de mercado: > 80%</p></div>', unsafe_allow_html=True)
         
     with m2:
         st.markdown(f'<div class="metric-card"><h4 style="color: #8B949E; margin:0;">VULNERABILIDADE OPERACIONAL</h4><h1 style="color: #F85149; margin:10px 0;">{st.session_state.tempo_operacional:.1f}h</h1><p style="color: #8B949E; font-size:12px; margin:0;">Tempo total queimado no operacional</p></div>', unsafe_allow_html=True)
@@ -101,7 +110,7 @@ with tab_dashboard:
                 
                 st.markdown("### 🚀 3. ENGENHARIA DE PROCESSO E AUTOMAÇÃO RECOMENDADA")
                 st.write("* **Substituição:** Migrar esta tarefa para uma infraestrutura de software SaaS ou BPO Administrativo.")
-                st.write("* **Plano Executivo:** Delegação compulsória para um assistente. Liberar a agenda do fundador gera um retorno sobre o tempo (ROT) exponencialmente maior.")
+                st.write("* **Plano Executivo:** Delegação compulsória para um assistente. Liberar a agenda do fundador para tarefas de captação de clientes gera um retorno sobre o tempo (ROT) exponencialmente maior.")
             
             else:
                 st.session_state.tempo_estrategico += horas_alocadas
@@ -115,6 +124,9 @@ with tab_dashboard:
                 st.success("🟢 EFICIÊNCIA CONFIRMADA: ALOCAÇÃO DE TEMPO ESTRATÉGICO")
                 st.markdown("### 📈 CERTIFICAÇÃO DE GOVERNANÇA CORPORATIVA")
                 st.write("A atividade executada possui características de alta alavancagem comercial e planejamento tático. Concentrar esforços em vendas, captação ou novos canais de distribuição gera ganho de escala imediato e maximiza o Valuation patrimonial.")
+            
+            st.session_state.custo_total_desperdiçado = float(st.session_state.custo_total_desperdiçado)
+            st.rerun()
 
     # --- HISTÓRICO EM TABELA CORPORATIVA ---
     st.markdown("---")
@@ -158,4 +170,5 @@ if st.button("Limpar Histórico e Resetar Servidor"):
     st.session_state.tempo_operacional = 0.0
     st.session_state.custo_total_desperdiçado = 0.0
     st.session_state.logs_auditoria = []
+    st.rerun()
 
